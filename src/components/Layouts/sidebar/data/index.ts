@@ -2,24 +2,139 @@ import * as Icons from "../icons";
 
 export const NAV_DATA = [
   {
-    label: "MAIN MENU",
+    label: "DASHBOARD",
     items: [
       {
-        title: "Dashboard",
+        title: "Overview",
         icon: Icons.HomeIcon,
+        url: "/",
+        items: [],
+      },
+    ],
+  },
+  {
+    label: "ORDER MANAGEMENT",
+    items: [
+      {
+        title: "Orders",
+        icon: Icons.Table,
         items: [
           {
-            title: "eCommerce",
-            url: "/",
+            title: "All Orders",
+            url: "/orders",
+          },
+          {
+            title: "Pending",
+            url: "/orders/pending",
+          },
+          {
+            title: "In Progress",
+            url: "/orders/in-progress",
+          },
+          {
+            title: "Ready",
+            url: "/orders/ready",
+          },
+          {
+            title: "Completed",
+            url: "/orders/completed",
           },
         ],
       },
       {
-        title: "Calendar",
-        url: "/calendar",
+        title: "Shipments",
         icon: Icons.Calendar,
+        items: [
+          {
+            title: "All Shipments",
+            url: "/shipments",
+          },
+          {
+            title: "Pending Pickups",
+            url: "/shipments/pending-pickups",
+          },
+          {
+            title: "Pending Deliveries",
+            url: "/shipments/pending-deliveries",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: "BUSINESS",
+    items: [
+      {
+        title: "Services",
+        icon: Icons.Alphabet,
+        url: "/services",
         items: [],
       },
+      {
+        title: "Promotions",
+        icon: Icons.PieChart,
+        url: "/promotions",
+        items: [],
+      },
+      {
+        title: "Branches",
+        icon: Icons.FourCircle,
+        url: "/branches",
+        items: [],
+      },
+    ],
+  },
+  {
+    label: "USER MANAGEMENT",
+    items: [
+      {
+        title: "Users",
+        icon: Icons.User,
+        items: [
+          {
+            title: "All Users",
+            url: "/users",
+          },
+          {
+            title: "Customers",
+            url: "/users/customers",
+          },
+          {
+            title: "Staff",
+            url: "/users/staff",
+          },
+        ],
+      },
+      {
+        title: "Shippers",
+        icon: Icons.User,
+        url: "/shippers",
+        items: [],
+      },
+    ],
+  },
+  {
+    label: "REPORTS",
+    items: [
+      {
+        title: "Statistics",
+        icon: Icons.PieChart,
+        items: [
+          {
+            title: "Revenue",
+            url: "/reports/revenue",
+          },
+          {
+            title: "Top Customers",
+            url: "/reports/top-customers",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    label: "SETTINGS",
+    items: [
       {
         title: "Profile",
         url: "/profile",
@@ -27,78 +142,16 @@ export const NAV_DATA = [
         items: [],
       },
       {
-        title: "Forms",
+        title: "Settings",
+        url: "/pages/settings",
         icon: Icons.Alphabet,
-        items: [
-          {
-            title: "Form Elements",
-            url: "/forms/form-elements",
-          },
-          {
-            title: "Form Layout",
-            url: "/forms/form-layout",
-          },
-        ],
+        items: [],
       },
       {
-        title: "Tables",
-        url: "/tables",
-        icon: Icons.Table,
-        items: [
-          {
-            title: "Tables",
-            url: "/tables",
-          },
-        ],
-      },
-      {
-        title: "Pages",
-        icon: Icons.Alphabet,
-        items: [
-          {
-            title: "Settings",
-            url: "/pages/settings",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    label: "OTHERS",
-    items: [
-      {
-        title: "Charts",
-        icon: Icons.PieChart,
-        items: [
-          {
-            title: "Basic Chart",
-            url: "/charts/basic-chart",
-          },
-        ],
-      },
-      {
-        title: "UI Elements",
-        icon: Icons.FourCircle,
-        items: [
-          {
-            title: "Alerts",
-            url: "/ui-elements/alerts",
-          },
-          {
-            title: "Buttons",
-            url: "/ui-elements/buttons",
-          },
-        ],
-      },
-      {
-        title: "Authentication",
+        title: "Sign Out",
         icon: Icons.Authentication,
-        items: [
-          {
-            title: "Sign In",
-            url: "/auth/sign-in",
-          },
-        ],
+        url: "/auth/sign-out",
+        items: [],
       },
     ],
   },

@@ -7,18 +7,27 @@ import {
   DropdownTrigger,
 } from "@/components/ui/dropdown";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import { useAuthStore } from "@/store/auth.store";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LogOutIcon, SettingsIcon, UserIcon } from "./icons";
 
 export function UserInfo() {
   const [isOpen, setIsOpen] = useState(false);
+  const router = useRouter();
+  const { user, logout } = useAuthStore();
 
-  const USER = {
-    name: "John Smith",
-    email: "johnson@nextadmin.com",
-    img: "/images/user/user-03.png",
+  const handleLogout = () => {
+    logout();
+    router.push('/auth/sign-in');
+  };
+
+  // Default user if not logged in
+  const displayUser = user || {
+    fullName: "Guest User",
+    email: "guest@washify.com",
+    role: "GUEST",
   };
 
   return (
@@ -27,16 +36,11 @@ export function UserInfo() {
         <span className="sr-only">My Account</span>
 
         <figure className="flex items-center gap-3">
-          <Image
-            src={USER.img}
-            className="size-12"
-            alt={`Avatar of ${USER.name}`}
-            role="presentation"
-            width={200}
-            height={200}
-          />
+          <div className="flex size-12 items-center justify-center rounded-full bg-primary text-white font-bold">
+            {displayUser.fullName.charAt(0).toUpperCase()}
+          </div>
           <figcaption className="flex items-center gap-1 font-medium text-dark dark:text-dark-6 max-[1024px]:sr-only">
-            <span>{USER.name}</span>
+            <span>{displayUser.fullName}</span>
 
             <ChevronUpIcon
               aria-hidden
@@ -57,21 +61,20 @@ export function UserInfo() {
         <h2 className="sr-only">User information</h2>
 
         <figure className="flex items-center gap-2.5 px-5 py-3.5">
-          <Image
-            src={USER.img}
-            className="size-12"
-            alt={`Avatar for ${USER.name}`}
-            role="presentation"
-            width={200}
-            height={200}
-          />
+          <div className="flex size-12 items-center justify-center rounded-full bg-primary text-white font-bold">
+            {displayUser.fullName.charAt(0).toUpperCase()}
+          </div>
 
           <figcaption className="space-y-1 text-base font-medium">
             <div className="mb-2 leading-none text-dark dark:text-white">
-              {USER.name}
+              {displayUser.fullName}
             </div>
 
-            <div className="leading-none text-gray-6">{USER.email}</div>
+            <div className="text-xs leading-none text-gray-6">{displayUser.email}</div>
+            
+            <div className="inline-block rounded bg-primary/10 px-2 py-1 text-xs font-semibold text-primary">
+              {displayUser.role}
+            </div>
           </figcaption>
         </figure>
 
@@ -106,7 +109,7 @@ export function UserInfo() {
         <div className="p-2 text-base text-[#4B5563] dark:text-dark-6">
           <button
             className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-[9px] hover:bg-gray-2 hover:text-dark dark:hover:bg-dark-3 dark:hover:text-white"
-            onClick={() => setIsOpen(false)}
+            onClick={handleLogout}
           >
             <LogOutIcon />
 
