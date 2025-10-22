@@ -43,7 +43,8 @@ export interface Order {
   notes?: string;
   deletedAt?: string | null;
   
-  // Populated fields (from joins)
+  // Populated fields (from joins or backend)
+  userName?: string; // Backend returns userName instead of customerName
   customerName?: string;
   customerPhone?: string;
   branchName?: string;

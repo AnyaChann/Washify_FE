@@ -3,14 +3,17 @@
 import { useEffect, useState } from "react";
 import { DashboardStats } from "./_components/dashboard-stats";
 import { OrderStatusChart } from "@/components/Charts/order-status";
+import { RecentOrdersTable } from "@/components/Tables/recent-orders";
 import { dashboardService } from "@/services/dashboard.service";
-import type { OrderStatistics, RevenueStatistics, ShipmentStatistics } from "@/types/api.types";
+import { orderService } from "@/services/order.service";
+import type { Order, OrderStatistics, RevenueStatistics, ShipmentStatistics } from "@/types/api.types";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [orderStats, setOrderStats] = useState<OrderStatistics | null>(null);
   const [revenueStats, setRevenueStats] = useState<RevenueStatistics | null>(null);
   const [shipmentStats, setShipmentStats] = useState<ShipmentStatistics | null>(null);
+  const [recentOrders, setRecentOrders] = useState<Order[]>([]);
 
   useEffect(() => {
     loadDashboardData();
@@ -19,15 +22,50 @@ export default function Home() {
   const loadDashboardData = async () => {
     try {
       setIsLoading(true);
-      const data = await dashboardService.getDashboardData();
       
-      setOrderStats(data.orders);
-      setRevenueStats(data.revenue);
-      setShipmentStats(data.shipments);
+      // Load dashboard stats first
+      const dashboardData = await dashboardService.getDashboardData();
+      setOrderStats(dashboardData.orders);
+      setRevenueStats(dashboardData.revenue);
+      setShipmentStats(dashboardData.shipments);
+      
+      // Try to load recent orders, but don't fail if it errors
+      try {
+        const orders = await orderService.getRecentOrders(10);
+        setRecentOrders(orders);
+      } catch (ordersError) {
+        console.error('Failed to load recent orders:', ordersError);
+        setRecentOrders([]); // Set empty array on error
+      }
     } catch (error) {
       console.error('Failed to load dashboard data:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleViewOrder = (orderId: number) => {
+    // TODO: Navigate to order detail page (Phase 3)
+    globalThis.window.alert(`View order #${orderId}\n(Order detail page chưa có, sẽ làm ở Phase 3)`);
+  };
+
+  const handleUpdateStatus = async (orderId: number) => {
+    try {
+      // Confirm order (PENDING -> CONFIRMED)
+      const confirmed = globalThis.window.confirm('Xác nhận đơn hàng này?');
+      if (!confirmed) return;
+
+      await orderService.updateOrderStatus(orderId, 'CONFIRMED');
+      
+      // Reload orders
+      const orders = await orderService.getRecentOrders(10);
+      setRecentOrders(orders);
+      
+      // Show success message
+      globalThis.window.alert('Đã xác nhận đơn hàng thành công!');
+    } catch (error) {
+      console.error('Failed to update order status:', error);
+      globalThis.window.alert('Không thể cập nhật trạng thái đơn hàng!');
     }
   };
 
@@ -103,6 +141,16 @@ export default function Home() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Recent Orders Table */}
+      <div className="mt-4 md:mt-6 2xl:mt-9">
+        <RecentOrdersTable
+          orders={recentOrders}
+          isLoading={isLoading}
+          onViewOrder={handleViewOrder}
+          onUpdateStatus={handleUpdateStatus}
+        />
       </div>
     </>
   );

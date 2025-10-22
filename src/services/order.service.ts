@@ -41,11 +41,19 @@ export const orderService = {
 
   // Update order status
   updateOrderStatus: async (id: number, status: string): Promise<Order> => {
-    const response = await axiosInstance.patch<ApiResponse<Order>>(
-      API_ENDPOINTS.ORDERS.UPDATE_STATUS(id),
-      { status }
-    );
-    return response.data.data;
+    console.log('Updating order status:', { id, status, url: API_ENDPOINTS.ORDERS.UPDATE_STATUS(id) });
+    
+    try {
+      const response = await axiosInstance.patch<ApiResponse<Order>>(
+        API_ENDPOINTS.ORDERS.UPDATE_STATUS(id),
+        { status }
+      );
+      console.log('Update success:', response.data);
+      return response.data.data;
+    } catch (error: any) {
+      console.error('Update failed:', error.response?.data || error);
+      throw error;
+    }
   },
 
   // Search orders
@@ -88,5 +96,26 @@ export const orderService = {
       { params: { limit } }
     );
     return response.data.data;
+  },
+
+  // Get recent orders (for dashboard)
+  getRecentOrders: async (limit = 10): Promise<Order[]> => {
+    try {
+      // Backend doesn't support pagination yet, so get all orders
+      const response = await axiosInstance.get<ApiResponse<Order[]>>(
+        API_ENDPOINTS.ORDERS.BASE
+      );
+      
+      console.log('Orders response:', response.data.data);
+      
+      // Return latest orders (sort by id desc and limit)
+      const orders = response.data.data || [];
+      const sortedOrders = [...orders].sort((a, b) => b.id - a.id);
+      return sortedOrders.slice(0, limit);
+    } catch (error) {
+      console.error('Failed to fetch recent orders:', error);
+      // Return empty array on error instead of throwing
+      return [];
+    }
   },
 };
