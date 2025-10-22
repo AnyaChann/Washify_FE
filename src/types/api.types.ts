@@ -208,9 +208,11 @@ export interface OrderStatistics {
 }
 
 export interface RevenueStatistics {
-  period: string;
-  revenue: number;
+  totalRevenue: number;
   orderCount: number;
+  averageOrderValue: number;
+  startDate: string;
+  endDate: string;
 }
 
 export interface ShipmentStatistics {

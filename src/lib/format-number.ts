@@ -13,3 +13,11 @@ export function standardFormat(value: number) {
     maximumFractionDigits: 2,
   });
 }
+
+export function formatNumber(value: number) {
+  return value.toLocaleString("vi-VN");
+}
+
+export function formatCurrency(value: number) {
+  return `${formatNumber(value)} ₫`;
+}
