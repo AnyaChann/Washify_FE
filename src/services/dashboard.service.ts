@@ -22,9 +22,19 @@ export const dashboardService = {
     groupBy?: 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
   }): Promise<RevenueStatistics> => {
     // Default to last 30 days if not provided
-    const endDate = params?.endDate || new Date().toISOString();
-    const startDate = params?.startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const now = new Date();
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    
+    // Format as yyyy-MM-ddTHH:mm:ss (LocalDateTime format)
+    const formatDateTime = (date: Date) => {
+      return date.toISOString().split('.')[0]; // Remove milliseconds and Z
+    };
+    
+    const endDate = params?.endDate || formatDateTime(now);
+    const startDate = params?.startDate || formatDateTime(thirtyDaysAgo);
     const groupBy = params?.groupBy || 'DAY';
+
+    console.log('Revenue stats params:', { startDate, endDate, groupBy });
 
     const response = await axiosInstance.get<{ data: RevenueStatistics }>(
       API_ENDPOINTS.ORDERS.REVENUE,
